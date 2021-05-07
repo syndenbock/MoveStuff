@@ -1,0 +1,14 @@
+## Interface: 90002
+## Notes: Let's you move default frames
+## Title: MoveStuff
+## Author: syndenbock
+## SavedVariables: MoveStuff_saved
+## X-SavedVariables: MoveStuff_saved
+## SavedVariablesPerCharacter:
+## Version: 1.0
+
+Events.lua
+SavedVariables.lua
+
+Frames.lua
+MoveStuff.lua
