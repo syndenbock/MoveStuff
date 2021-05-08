@@ -155,10 +155,14 @@ local function initFrame (frame)
   lockFrame(frame);
 end
 
-local function handleAddonLoad (loadedAddon)
-  local frameList = addon.frames[loadedAddon];
+local function clearConflictFrame (frame)
+  frame:ClearAllPoints();
+end
 
-  if (not frameList) then
+local function forEachAddonFrame (frameMap, loadedAddon, callback)
+  local frameList = frameMap[loadedAddon];
+
+  if (frameList == nil) then
     return;
   end
 
@@ -170,13 +174,26 @@ local function handleAddonLoad (loadedAddon)
     local frame = findFrame(frameName);
 
     if (frame) then
-      initFrame(frame);
+      callback(frame);
     else
       debug('could not find frame:', frameName);
     end
   end
 
-  addon.frames[loadedAddon] = nil;
+  frameMap[loadedAddon] = nil;
+end
+
+local function restoreAddonFrames (loadedAddon)
+  forEachAddonFrame(addon.frames, loadedAddon, initFrame);
+end
+
+local function clearConflictFrames (loadedAddon)
+  forEachAddonFrame(addon.conflictFrames, loadedAddon, clearConflictFrame);
+end
+
+local function handleAddonLoad (loadedAddon)
+  restoreAddonFrames(loadedAddon);
+  clearConflictFrames(loadedAddon);
 end
 
 local function hasAddOnFinishedLoading (name)

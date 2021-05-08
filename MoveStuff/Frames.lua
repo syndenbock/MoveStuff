@@ -56,3 +56,7 @@ addon.frames = {
   Blizzard_VoidStorageUI = 'VoidStorageFrame',
   ElvUI = 'ElvUI_ContainerFrame',
 };
+
+addon.conflictFrames = {
+  Blizzard_EncounterJournal = 'EncounterJournalTooltip',
+};
