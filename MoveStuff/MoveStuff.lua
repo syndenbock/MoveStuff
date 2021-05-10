@@ -1,9 +1,8 @@
-local addonName, addon = ...;
+local _, addon = ...;
 
 local InCombatLockdown = _G.InCombatLockdown;
 local IsAddOnLoaded = _G.IsAddOnLoaded;
 
-local hooksecurefunc = _G.hooksecurefunc;
 local UIParent = _G.UIParent;
 local SetPoint = UIParent.SetPoint;
 
@@ -93,7 +92,7 @@ local function restoreFramePosition (frame)
 end
 
 local function lockFrame (frame)
-  hooksecurefunc(frame, 'SetPoint', restoreFramePosition);
+  addon.hookSafe(frame, 'SetPoint', restoreFramePosition);
 end
 
 local function restoreFrameScale (frame)
@@ -141,7 +140,7 @@ local function addMouseWheelListener (frame)
   if (frame.NineSlice ~= nil or
       frame:GetScript('OnMouseWheel') ~= nil) then return end
 
-  addon.hookScriptSecure(frame, 'OnMouseWheel', handleMouseWheel);
+  addon.hookScriptSafe(frame, 'OnMouseWheel', handleMouseWheel);
 end
 
 local function initFrame (frame)
@@ -151,7 +150,7 @@ local function initFrame (frame)
   frame:HookScript('OnMouseUp', handleMouseUp);
   addMouseWheelListener(frame);
 
-  addon.hookScriptSecure(frame, 'OnShow', restoreFramePosition);
+  addon.hookScriptSafe(frame, 'OnShow', restoreFramePosition);
   lockFrame(frame);
 end
 
@@ -159,62 +158,74 @@ local function clearConflictFrame (frame)
   frame:ClearAllPoints();
 end
 
-local function forEachAddonFrame (frameMap, loadedAddon, callback)
-  local frameList = frameMap[loadedAddon];
+local function forAddonFrame (frameName, callback)
+  local frame = findFrame(frameName);
 
+  if (frame == nil) then
+    debug('could not find frame:', frameName);
+    return;
+  end
+
+  callback(frame);
+end
+
+local function forEachAddonFrame (frameList, callback)
   if (frameList == nil) then
     return;
   end
 
-  if (type(frameList) ~= 'table') then
-    frameList = {frameList};
-  end
-
-  for _, frameName in ipairs(frameList) do
-    local frame = findFrame(frameName);
-
-    if (frame) then
-      callback(frame);
-    else
-      debug('could not find frame:', frameName);
+  if (type(frameList) == 'table') then
+    for _, frameName in ipairs(frameList) do
+      forAddonFrame(frameName, callback);
     end
+  else
+    forAddonFrame(frameList, callback);
   end
-
-  frameMap[loadedAddon] = nil;
 end
 
 local function restoreAddonFrames (loadedAddon)
-  forEachAddonFrame(addon.frames, loadedAddon, initFrame);
+  forEachAddonFrame(addon.frames[loadedAddon], initFrame);
 end
 
 local function clearConflictFrames (loadedAddon)
-  forEachAddonFrame(addon.conflictFrames, loadedAddon, clearConflictFrame);
+  forEachAddonFrame(addon.conflictFrames[loadedAddon], clearConflictFrame);
 end
 
-local function handleAddonLoad (loadedAddon)
-  restoreAddonFrames(loadedAddon);
-  clearConflictFrames(loadedAddon);
+local function removeAddonInfo (addonName)
+  addon.frames[addonName] = nil;
+  addon.conflictFrames[addonName] = nil;
 end
 
-local function hasAddOnFinishedLoading (name)
-  return select(2, IsAddOnLoaded(name));
+local function handleAddon (addonName)
+  restoreAddonFrames(addonName);
+  clearConflictFrames(addonName);
+  removeAddonInfo(addonName);
+end
+
+local function hasAddOnFinishedLoading (addonName)
+  return select(2, IsAddOnLoaded(addonName));
 end
 
 local function checkLoadedAddons ()
-  for name in pairs(addon.frames) do
-    if (hasAddOnFinishedLoading(name)) then
-      handleAddonLoad(name);
+  for addonName in pairs(addon.frames) do
+    if (hasAddOnFinishedLoading(addonName)) then
+      handleAddon(addonName);
     end
   end
 end
 
-addon.on('PLAYER_LOGIN', function ()
-  handleAddonLoad(addonName);
+addon.onOnceSafe('PLAYER_LOGIN', function ()
   checkLoadedAddons();
 
-  addon.on('ADDON_LOADED', function (loadedAddon)
-    if (loadedAddon ~= addonName) then
-      handleAddonLoad(loadedAddon);
+  local handler;
+
+  handler = addon.createCombatCallback(function (addonName)
+    handleAddon(addonName);
+    if ((next(addon.frames) == nil) and
+        (next(addon.conflictFrames) == nil)) then
+      addon.off('ADDON_LOADED', handler);
     end
   end);
+
+  addon.on('ADDON_LOADED', handler);
 end);

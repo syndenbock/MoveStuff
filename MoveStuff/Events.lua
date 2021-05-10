@@ -1,96 +1,68 @@
-local _, addon = ...;
+local addonName, addon = ...;
 
-local tinsert = _G.tinsert;
-local hooksecurefunc = _G.hooksecurefunc;
+local eventFrame = _G.CreateFrame('frame');
+local callbacks = {};
 
-local InCombatLockdown = _G.InCombatLockdown;
-
-local events = {}
-local addonFrame = _G.CreateFrame('frame')
-
-function addon.on (eventList, callback)
-  if (type(eventList) ~= 'table') then
-    eventList = {eventList};
-  end
-
-  for _, event in ipairs(eventList) do
-    if (events[event] == nil) then
-      events[event] = {callback};
-      addonFrame:RegisterEvent(event);
-    else
-      tinsert(events[event], callback);
-    end
-  end
-end
-
-local function eventHandler (_, event, ...)
-  for _, callback in ipairs(events[event]) do
+eventFrame:SetScript('OnEvent', function (_, event, ...)
+  for callback in pairs(callbacks[event]) do
     callback(...);
   end
+end);
+
+local function addCallback (event, callback)
+  if (callbacks[event] == nil) then
+    callbacks[event] = {
+      [callback] = true,
+    };
+    eventFrame:RegisterEvent(event);
+  else
+    callbacks[event][callback] = true;
+  end
 end
 
-addonFrame:SetScript('OnEvent', eventHandler);
+local function removeCallback (event, callback)
+  callbacks[event][callback] = nil;
 
---[[
-///#############################################################################
-/// in combat hooking
-///#############################################################################
---]]
-do
-  local combatMap = {};
-  local callbackCount = 0;
+  if (next(callbacks[event]) == nil) then
+    callbacks[event] = nil;
+    eventFrame:UnregisterEvent(event);
+  end
+end
 
-  local function createHook (script, callback)
-    local callbackId = callbackCount;
-
-    callbackCount = callbackCount + 1;
-
-    return function (...)
-      local frame = ...;
-
-      if (InCombatLockdown() and frame:IsProtected()) then
-        local funcInfo = combatMap[script];
-
-        if (funcInfo == nil) then
-          combatMap[script] = {
-            params = {...},
-            callbacks = {
-              [callbackId] = callback,
-            },
-          }
-        else
-          funcInfo.callbacks[callbackId] = callback;
-          funcInfo.params = {...};
-        end
-      else
-        callback(...);
-      end
-    end
+local function addSingleFireCallback (event, callback)
+  local function wrapper (...)
+    callback(...);
+    removeCallback(event, wrapper);
   end
 
-  function addon.hookScriptSecure (frame, script, callback)
-    frame:HookScript(script, createHook(script, callback));
-  end
+  addCallback(event, wrapper);
+end
 
-  function addon.hooksecure (...)
-    if (select('#', ...) >= 3) then
-      local frame, script, callback = ...;
+local function callForEvents (events, callback, method)
+  assert(type(callback) == 'function',
+    addonName .. ': callback is not a function');
 
-      hooksecurefunc(frame, script, createHook(script, callback));
-    else
-      local script, callback = ...;
-
-      hooksecurefunc(script, createHook(script, callback));
+  if (type(events) == 'table') then
+    for _, event in ipairs(events) do
+      method(event, callback);
     end
+  else
+    method(events, callback);
   end
+end
 
-  addon.on('PLAYER_REGEN_ENABLED', function ()
-    for _, funcInfo in pairs (combatMap) do
-      for _, callback in pairs(funcInfo.callbacks) do
-        callback(unpack(funcInfo.params));
-      end
-    end
+--##############################################################################
+-- public methods
+--##############################################################################
 
-    combatMap = {};
-  end);
+function addon.on (events, callback)
+  callForEvents(events, callback, addCallback);
+end
+
+function addon.onOnce (events, callback)
+  callForEvents(events, callback, addSingleFireCallback);
+end
+
+function addon.off (events, callback)
+  callForEvents(events, callback, removeCallback);
 end

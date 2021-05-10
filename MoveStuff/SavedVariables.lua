@@ -29,14 +29,17 @@ local function globalizeOptions (options, globalName)
   end
 end
 
-addon.on('ADDON_LOADED', function (loadedAddonName)
+local function addonLoadHandler (loadedAddonName)
   if (loadedAddonName ~= addonName) then
     return;
   end
 
   updateOptions(addon.saved, _G[SAVEDVARS_KEY] or {});
   updateOptions(addon.charSaved, _G[SAVEDCHARVARS_KEY] or {});
-end);
+  addon.off('ADDON_LOADED', addonLoadHandler);
+end
+
+addon.on('ADDON_LOADED', addonLoadHandler);
 
 addon.on('PLAYER_LOGOUT', function ()
   globalizeOptions(addon.saved, SAVEDVARS_KEY);
