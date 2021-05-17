@@ -47,16 +47,25 @@ local function setFramePosition (frame, ...)
   SetPoint(frame, ...);
 end
 
-local function transformFrameAnchors (frame)
+local function getCenteredPoints (frame)
   local points = {frame:GetCenter()};
-  local parentPoints = {UIParent:GetCenter()};
+
+  return {
+    x = points[1] * frame:GetEffectiveScale(),
+    y = points[2] * frame:GetEffectiveScale(),
+  };
+end
+
+local function transformFrameAnchors (frame)
+  local points = getCenteredPoints(frame);
+  local parentPoints = getCenteredPoints(UIParent);
 
   return {
     'CENTER',
     nil,
     'CENTER',
-    points[1] - parentPoints[1],
-    points[2] - parentPoints[2],
+    (points.x - parentPoints.x) / frame:GetEffectiveScale(),
+    (points.y - parentPoints.y) / frame:GetEffectiveScale(),
   };
 end
 
