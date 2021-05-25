@@ -1,13 +1,18 @@
 local _, addon = ...;
 
+local strfind = _G.strfind;
+
 local InCombatLockdown = _G.InCombatLockdown;
 local IsAddOnLoaded = _G.IsAddOnLoaded;
+local GetAddOnEnableState = _G.GetAddOnEnableState;
 
 local UIParent = _G.UIParent;
 local SetPoint = UIParent.SetPoint;
 
 local LEFTBUTTON = 'LeftButton';
 local MIDDLEBUTTON = 'MiddleButton';
+
+local PLAYER_NAME = _G.UnitName('player');
 
 local saved = addon.saved;
 local draggedFrames = {};
@@ -215,6 +220,14 @@ local function hasAddOnFinishedLoading (addonName)
   return select(2, IsAddOnLoaded(addonName));
 end
 
+local function isAddonEnabled (addonName)
+  return (GetAddOnEnableState(PLAYER_NAME, addonName) == 2);
+end
+
+local function isBlizzardAddon (addonName)
+  return (strfind(addonName, 'Blizzard_', 1, true) == 1);
+end
+
 local function checkLoadedAddons ()
   for addonName in pairs(addon.frames) do
     if (hasAddOnFinishedLoading(addonName)) then
@@ -223,15 +236,33 @@ local function checkLoadedAddons ()
   end
 end
 
+local function checkDisabledAddons ()
+  for addonName in pairs(addon.frames) do
+    if (not isAddonEnabled(addonName) and not isBlizzardAddon(addonName)) then
+      print(addonName);
+      removeAddonInfo(addonName);
+    end
+  end
+end
+
+local function areAddonsPending ()
+  return (next(addon.frames) ~= nil or next(addon.conflictFrames) ~= nil);
+end
+
 addon.onOnceSafe('PLAYER_LOGIN', function ()
   checkLoadedAddons();
+  checkDisabledAddons();
+
+  if (not areAddonsPending()) then
+    return;
+  end
 
   local handler;
 
   handler = addon.createCombatCallback(function (addonName)
     handleAddon(addonName);
-    if ((next(addon.frames) == nil) and
-        (next(addon.conflictFrames) == nil)) then
+
+    if (not areAddonsPending()) then
       addon.off('ADDON_LOADED', handler);
     end
   end);
