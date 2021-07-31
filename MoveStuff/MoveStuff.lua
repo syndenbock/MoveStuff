@@ -18,6 +18,8 @@ local saved = addon.saved;
 local draggedFrames = {};
 local frameGroups = addon.frameGroups;
 
+local SCALING_ENABLED = false;
+
 saved.framePositions = saved.framePositions or {};
 saved.frameScales = saved.frameScales or {};
 
@@ -121,7 +123,10 @@ end
 
 local function restoreFrame (frame)
   restoreFramePosition(frame);
-  restoreFrameScale(frame);
+
+  if (SCALING_ENABLED) then
+    restoreFrameScale(frame);
+  end
 end
 
 local function handleMouseDown (frame, button)
@@ -162,7 +167,10 @@ local function initFrame (frame)
   restoreFrame(frame);
   frame:HookScript('OnMouseDown', handleMouseDown);
   frame:HookScript('OnMouseUp', handleMouseUp);
-  addMouseWheelListener(frame);
+
+  if (SCALING_ENABLED) then
+    addMouseWheelListener(frame);
+  end
 
   addon.hookScriptSafe(frame, 'OnShow', restoreFramePosition);
   lockFrame(frame);
