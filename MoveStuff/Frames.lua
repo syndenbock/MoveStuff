@@ -17,6 +17,7 @@ addon.frames = {
     'LootFrame',
     'MailFrame',
     'MerchantFrame',
+    'PetStableFrame',
     'PVEFrame',
     'QuestFrame',
     'SpellBookFrame',
@@ -43,9 +44,12 @@ addon.frames = {
     'GarrisonCapacitiveDisplayFrame',
     'GarrisonLandingPage',
   },
+  Blizzard_GuildBankUI = 'GuildBankFrame',
   Blizzard_InspectUI = 'InspectFrame',
+  Blizzard_ItemSocketingUI = 'ItemSocketingFrame',
   Blizzard_ItemUpgradeUI = 'ItemUpgradeFrame',
   Blizzard_MacroUI = 'MacroFrame',
+  Blizzard_OrderHallUI = 'OrderHallTalentFrame',
   Blizzard_RuneforgeUI = 'RuneforgeFrame',
   Blizzard_ScrappingMachineUI =  'ScrappingMachineFrame',
   Blizzard_Soulbinds = 'SoulbindViewer',
@@ -54,7 +58,10 @@ addon.frames = {
   Blizzard_TradeSkillUI = 'TradeSkillFrame',
   Blizzard_TrainerUI = 'ClassTrainerFrame',
   Blizzard_VoidStorageUI = 'VoidStorageFrame',
-  ElvUI = 'ElvUI_ContainerFrame',
+  ElvUI = {
+    'ElvUI_BankContainerFrame',
+    'ElvUI_ContainerFrame',
+  }
 };
 
 addon.conflictFrames = {
