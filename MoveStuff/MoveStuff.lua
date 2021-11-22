@@ -247,7 +247,6 @@ end
 local function checkDisabledAddons ()
   for addonName in pairs(addon.frames) do
     if (not isAddonEnabled(addonName) and not isBlizzardAddon(addonName)) then
-      print(addonName);
       removeAddonInfo(addonName);
     end
   end
@@ -268,6 +267,7 @@ addon.onOnceSafe('PLAYER_LOGIN', function ()
   local handler;
 
   handler = addon.createCombatCallback(function (addonName)
+    addon.patch(addonName);
     handleAddon(addonName);
 
     if (not areAddonsPending()) then

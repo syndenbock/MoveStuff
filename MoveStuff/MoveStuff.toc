@@ -12,4 +12,5 @@ CombatHooks.lua
 SavedVariables.lua
 
 Frames.lua
+Patches.lua
 MoveStuff.lua
