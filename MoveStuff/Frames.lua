@@ -30,6 +30,7 @@ addon.frames = {
   Blizzard_AuctionHouseUI = 'AuctionHouseFrame',
   Blizzard_AzeriteRespecUI = 'AzeriteRespecFrame',
   Blizzard_AzeriteUI = 'AzeriteEmpoweredItemUI',
+  Blizzard_BlackMarketUI = 'BlackMarketFrame',
   Blizzard_Calendar = 'CalendarFrame',
   Blizzard_Collections = {
     'CollectionsJournal',
