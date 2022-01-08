@@ -176,10 +176,6 @@ local function initFrame (frame)
   lockFrame(frame);
 end
 
-local function clearConflictFrame (frame)
-  frame:ClearAllPoints();
-end
-
 local function forAddonFrame (frameName, callback)
   local frame = findFrame(frameName);
 
@@ -209,18 +205,12 @@ local function restoreAddonFrames (loadedAddon)
   forEachAddonFrame(addon.frames[loadedAddon], initFrame);
 end
 
-local function clearConflictFrames (loadedAddon)
-  forEachAddonFrame(addon.conflictFrames[loadedAddon], clearConflictFrame);
-end
-
 local function removeAddonInfo (addonName)
   addon.frames[addonName] = nil;
-  addon.conflictFrames[addonName] = nil;
 end
 
 local function handleAddon (addonName)
   restoreAddonFrames(addonName);
-  clearConflictFrames(addonName);
   removeAddonInfo(addonName);
 end
 
@@ -253,7 +243,7 @@ local function checkDisabledAddons ()
 end
 
 local function areAddonsPending ()
-  return (next(addon.frames) ~= nil or next(addon.conflictFrames) ~= nil);
+  return (next(addon.frames) ~= nil);
 end
 
 addon.onOnceSafe('PLAYER_LOGIN', function ()

@@ -8,6 +8,9 @@ local patches = {
 		label:ClearAllPoints();
 		label:SetPoint('LEFT', checkBox, 'RIGHT', 2, 1);
 		label:SetPoint('RIGHT', checkBox, 'RIGHT', 160, 1);
+  end,
+  Blizzard_EncounterJournal = function ()
+    _G.EncounterJournalTooltip:ClearAllPoints();
   end
 };
 

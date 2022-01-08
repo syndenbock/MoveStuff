@@ -64,7 +64,3 @@ addon.frames = {
     'ElvUI_ContainerFrame',
   }
 };
-
-addon.conflictFrames = {
-  Blizzard_EncounterJournal = 'EncounterJournalTooltip',
-};
