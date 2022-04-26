@@ -47,6 +47,7 @@ addon.frames = {
   },
   Blizzard_GuildBankUI = 'GuildBankFrame',
   Blizzard_InspectUI = 'InspectFrame',
+  Blizzard_ItemInteractionUI = 'ItemInteractionFrame',
   Blizzard_ItemSocketingUI = 'ItemSocketingFrame',
   Blizzard_ItemUpgradeUI = 'ItemUpgradeFrame',
   Blizzard_MacroUI = 'MacroFrame',
