@@ -13,17 +13,19 @@ addon.frames = {
     'DressUpFrame',
     'FriendsFrame',
     'GossipFrame',
+    'GuildRegistrarFrame',
     'ItemTextFrame',
     'LootFrame',
     'MailFrame',
     'MerchantFrame',
+    'PetitionFrame',
     'PetStableFrame',
     'PVEFrame',
     'QuestFrame',
     'SpellBookFrame',
     'TaxiFrame',
     'TradeFrame',
-    'UIWidgetBelowMinimapContainerFrame',
+    -- 'UIWidgetBelowMinimapContainerFrame',
     'WorldMapFrame',
   },
   Blizzard_AchievementUI = 'AchievementFrame',
@@ -32,6 +34,7 @@ addon.frames = {
   Blizzard_AzeriteUI = 'AzeriteEmpoweredItemUI',
   Blizzard_BlackMarketUI = 'BlackMarketFrame',
   Blizzard_Calendar = 'CalendarFrame',
+  Blizzard_ClickBindingUI = 'ClickBindingFrame',
   Blizzard_Collections = {
     'CollectionsJournal',
     'WardrobeFrame',
@@ -62,6 +65,6 @@ addon.frames = {
   Blizzard_VoidStorageUI = 'VoidStorageFrame',
   ElvUI = {
     'ElvUI_BankContainerFrame',
-    'ElvUI_ContainerFrame',
+    -- 'ElvUI_ContainerFrame',
   }
 };
