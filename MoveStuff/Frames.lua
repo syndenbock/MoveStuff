@@ -9,6 +9,8 @@ addon.frameGroups = {
 
 addon.frames = {
   [addonName] = {
+    'BonusRollFrame',
+    'ChannelFrame',
     'CharacterFrame',
     'DressUpFrame',
     'FriendsFrame',
@@ -22,6 +24,8 @@ addon.frames = {
     'PetStableFrame',
     'PVEFrame',
     'QuestFrame',
+    'QuestLogFrame',
+    'ProfessionsFrame',
     'SpellBookFrame',
     'TaxiFrame',
     'TradeFrame',
