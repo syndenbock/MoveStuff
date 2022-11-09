@@ -9,8 +9,20 @@ local patches = {
     label:SetPoint('LEFT', checkBox, 'RIGHT', 2, 1);
     label:SetPoint('RIGHT', checkBox, 'RIGHT', 160, 1);
   end,
+  Blizzard_Communities = function ()
+    local dialog = _G.CommunitiesFrame.NotificationSettingsDialog;
+
+    if (dialog) then
+      dialog:ClearAllPoints();
+      dialog:SetAllPoints();
+    end
+  end,
   Blizzard_EncounterJournal = function ()
     _G.EncounterJournalTooltip:ClearAllPoints();
+  end,
+  ElvUI = function ()
+    _G.MailFrameInset.SetPoint = _G.MailFrameInset.ClearAllPoints;
+    _G.OpenMailFrameInset.SetPoint = _G.OpenMailFrameInset.ClearAllPoints;
   end
 };
 

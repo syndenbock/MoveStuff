@@ -210,6 +210,7 @@ local function removeAddonInfo (addonName)
 end
 
 local function handleAddon (addonName)
+  addon.patch(addonName);
   restoreAddonFrames(addonName);
   removeAddonInfo(addonName);
 end
@@ -257,7 +258,6 @@ addon.onOnceSafe('PLAYER_LOGIN', function ()
   local handler;
 
   handler = addon.createCombatCallback(function (addonName)
-    addon.patch(addonName);
     handleAddon(addonName);
 
     if (not areAddonsPending()) then
