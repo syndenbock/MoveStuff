@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110002
 ## Notes: Let's you move default frames
 ## Title: MoveStuff
 ## Author: syndenbock
