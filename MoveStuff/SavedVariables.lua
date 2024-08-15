@@ -1,9 +1,10 @@
 local addonName, addon = ...;
 
-local SAVEDVARS_KEY = _G.GetAddOnMetadata(addonName, 'X-SavedVariables') or
+local SAVEDVARS_KEY =
+    _G.C_AddOns.GetAddOnMetadata(addonName, 'X-SavedVariables') or
     addonName .. '_saved';
 local SAVEDCHARVARS_KEY =
-    _G.GetAddOnMetadata(addonName, 'X-SavedVariablesPerCharacter') or
+    _G.C_AddOns.GetAddOnMetadata(addonName, 'X-SavedVariablesPerCharacter') or
     addonName .. 'charSaved';
 
 addon.saved = {};

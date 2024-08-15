@@ -3,8 +3,8 @@ local _, addon = ...;
 local strfind = _G.strfind;
 
 local InCombatLockdown = _G.InCombatLockdown;
-local IsAddOnLoaded = _G.IsAddOnLoaded;
-local GetAddOnEnableState = _G.GetAddOnEnableState;
+local IsAddOnLoaded = _G.C_AddOns.IsAddOnLoaded;
+local GetAddOnEnableState = _G.C_AddOns.GetAddOnEnableState;
 
 local UIParent = _G.UIParent;
 local SetPoint = UIParent.SetPoint;
