@@ -63,6 +63,7 @@ addon.frames = {
   Blizzard_MajorFactions = 'MajorFactionRenownFrame',
   Blizzard_OrderHallUI = 'OrderHallTalentFrame',
   Blizzard_Professions = 'ProfessionsFrame',
+  Blizzard_ProfessionsBook = 'ProfessionsBookFrame',
   Blizzard_ProfessionsCustomerOrders = 'ProfessionsCustomerOrdersFrame',
   Blizzard_RuneforgeUI = 'RuneforgeFrame',
   Blizzard_ScrappingMachineUI =  'ScrappingMachineFrame',
@@ -71,6 +72,7 @@ addon.frames = {
   Blizzard_TalkingHeadUI = 'TalkingHeadFrame',
   Blizzard_TradeSkillUI = 'TradeSkillFrame',
   Blizzard_TrainerUI = 'ClassTrainerFrame',
+  Blizzard_TokenUI = 'CurrencyTransferMenu',
   Blizzard_VoidStorageUI = 'VoidStorageFrame',
   ElvUI = {
     'ElvUI_BankContainerFrame',
